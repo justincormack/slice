@@ -11,16 +11,7 @@ a = slice.make(int_t, 5, 5)
 assert(a.len == 5)
 assert(a.cap == 5)
 
-a = slice.slice(int_t,  1, 2, 3, 4, 5)
-
-for i = 1, a.len do
-  assert(a[i - 1] == i)
-end
-
-assert(a.len == 5)
-assert(a.cap == 5)
-
-a = slice.slice(int_t,  {1, 2, 3, 4, 5})
+a = slice.make(int_t,  {1, 2, 3, 4, 5})
 
 for i = 1, a.len do
   assert(a[i - 1] == i)
@@ -31,7 +22,7 @@ assert(a.cap == 5)
 
 print(a)
 
-a = slice.slice(int_t, {})
+a = slice.make(int_t, {})
 assert(a.len == 0)
 assert(a.cap == 0)
 

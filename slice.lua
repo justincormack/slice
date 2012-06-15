@@ -23,20 +23,16 @@ local mt = {
 }
 
 function slice.make(ct, len, cap)
+  local t
+  if type(len) == 'table' then
+    t = len
+    len = #t
+  end
   cap = cap or len or 0
   local array = ffi.cast(ffi.typeof("$ *", ct), buffer(cap * ffi.sizeof(ffi.typeof(ct))))
   local s = {len = len, cap = cap, slice = array, array = array, type = ct}
+  if t then for i = 1, len do s.slice[i - 1] = t[i] end end
   return setmetatable(s, mt)
-end
-
-function slice.slice(ct, t, ...) -- like the Go slice literal, but can also take table
-  if type(t) ~= "table" then t = {t, ...} end
-  local len = #t
-  local s = slice.make(ct, len)
-  for i = 1, len do
-    s[i - 1] = t[i]
-  end
-  return s
 end
 
 
