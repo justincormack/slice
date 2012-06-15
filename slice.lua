@@ -10,7 +10,7 @@ local slice = {}
 local buffer = ffi.typeof("char [?]")
 
 local mt = {
-  __len = function(s) return s.len end,
+  __len = function(s) return s.len end, -- only works in 5.2
   __index = function(s, i) return s.slice[i] end,
   __newindex = function(s, i, v) s.slice[i] = v end,
   __tostring = function(s)
@@ -26,8 +26,7 @@ function slice.make(ct, len, cap)
   cap = cap or len or 0
   local array = ffi.cast(ffi.typeof("$ *", ct), buffer(cap * ffi.sizeof(ffi.typeof(ct))))
   local s = {len = len, cap = cap, slice = array, array = array, type = ct}
-  setmetatable(s, mt)
-  return s
+  return setmetatable(s, mt)
 end
 
 function slice.slice(ct, t, ...) -- like the Go slice literal, but can also take table
@@ -39,6 +38,7 @@ function slice.slice(ct, t, ...) -- like the Go slice literal, but can also take
   end
   return s
 end
+
 
 
 return slice
