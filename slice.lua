@@ -5,9 +5,6 @@ local function slice()
 
 local ffi = require "ffi"
 
---local arrays = {} -- weak table to 
---setmetatable(arrays, {__mode = "v"} -- weak values
-
 local slice = {}
 
 local buffer = ffi.typeof("char [?]")
@@ -25,20 +22,18 @@ local mt = {
   end
 }
 
--- type needs to be passed as string, as can't do pointer to type. hmmm.
-
-function slice.make(typ, len, cap)
+function slice.make(ct, len, cap)
   cap = cap or len or 0
-  local array = ffi.cast(ffi.typeof(typ .. "*"), buffer(cap * ffi.sizeof(ffi.typeof(typ))))
-  local s = {len = len, cap = cap, slice = array, array = array}
+  local array = ffi.cast(ffi.typeof("$ *", ct), buffer(cap * ffi.sizeof(ffi.typeof(ct))))
+  local s = {len = len, cap = cap, slice = array, array = array, type = ct}
   setmetatable(s, mt)
   return s
 end
 
-function slice.slice(typ, t, ...) -- like the Go slice literal, but can also take table
+function slice.slice(ct, t, ...) -- like the Go slice literal, but can also take table
   if type(t) ~= "table" then t = {t, ...} end
   local len = #t
-  local s = slice.make(typ, len)
+  local s = slice.make(ct, len)
   for i = 1, len do
     s[i - 1] = t[i]
   end
