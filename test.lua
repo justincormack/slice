@@ -4,7 +4,11 @@ local slice = require "slice"
 
 local int_t = ffi.typeof("int")
 
-local a
+local a, b
+
+a = slice.make(int_t, {})
+assert(a.len == 0)
+assert(a.cap == 0)
 
 a = slice.make(int_t, 5, 5)
 
@@ -22,7 +26,8 @@ assert(a.cap == 5)
 
 print(a)
 
-a = slice.make(int_t, {})
-assert(a.len == 0)
-assert(a.cap == 0)
+b = a.slice(1, 4)
+
+assert(b.len == 3)
+assert(tostring(b) == "[2,3,4]")
 
