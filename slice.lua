@@ -1,9 +1,10 @@
-
--- array slice code. API loosely based around the Go slice API http://blog.golang.org/2011/01/go-slices-usage-and-internals.html
-
 local function slice()
 
 local ffi = require "ffi"
+
+ffi.cdef[[
+void *memmove(void *dest, const void *src, size_t n);
+]]
 
 local slice = {}
 
@@ -57,7 +58,7 @@ mt = {
       ffi.copy(s.s + a.len, b.s, ffi.sizeof(a.type) * b.len)
       return s
     end
-    ffi.copy(a.s + a.len, b.s, ffi.sizeof(a.type) * b.len)
+    ffi.C.memmove(a.s + a.len, b.s, ffi.sizeof(a.type) * b.len)
     return s
   end
 }
@@ -76,7 +77,7 @@ end
 function slice.copy(dest, src)
   sametype(dest, src)
   local len = math.min(dest.cap, src.len)
-  ffi.copy(dest.s, src.s, ffi.sizeof(dest.type) * len)
+  ffi.C.memmove(dest.s, src.s, ffi.sizeof(dest.type) * len)
   dest.len = len
   return dest
 end
