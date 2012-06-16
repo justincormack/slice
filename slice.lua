@@ -48,7 +48,7 @@ function slice.make(ct, len, cap) -- allows table initializer
     len = #t
   end
   local s = make(ct, len, cap)
-  if t then for i = 1, len do s.s[i - 1] = t[i] end end
+  if t then for i = 1, len do s.s[i - 1] = ct(t[i]) end end
   return s
 end
 
