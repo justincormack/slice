@@ -33,17 +33,23 @@ mt = {
   end,
 }
 
-function slice.make(ct, len, cap)
+-- raw make function
+local function make(ct, len, cap)
+  cap = cap or len or 0
+  local array = ffi.cast(ffi.typeof("$ *", ct), buffer(cap * ffi.sizeof(ffi.typeof(ct))))
+  local s = {len = len, cap = cap, s = array, array = array, type = ct}
+  return setmetatable(s, mt)
+end
+
+function slice.make(ct, len, cap) -- allows table initializer
   local t
   if type(len) == 'table' then
     t = len
     len = #t
   end
-  cap = cap or len or 0
-  local array = ffi.cast(ffi.typeof("$ *", ct), buffer(cap * ffi.sizeof(ffi.typeof(ct))))
-  local s = {len = len, cap = cap, s = array, array = array, type = ct}
+  local s = make(ct, len, cap)
   if t then for i = 1, len do s.s[i - 1] = t[i] end end
-  return setmetatable(s, mt)
+  return s
 end
 
 return slice
