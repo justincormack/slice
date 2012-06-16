@@ -11,6 +11,14 @@ local buffer = ffi.typeof("char [?]")
 
 local mt
 
+local function totable(s)
+  local t = {}
+  for i = 1, s.len do
+    t[#t + 1] = tostring(s.s[i - 1])
+  end
+  return t
+end
+
 mt = {
   __len = function(s) return s.len end, -- only works in 5.2
   __index = function(s, i)
@@ -21,15 +29,12 @@ mt = {
         return setmetatable({len = len, cap = s.cap, s = s.s + i, array = s.array, type = s.type}, mt)
       end
     end
+    if i == 'table' then return totable(s) end
     return s.s[i]
   end,
   __newindex = function(s, i, v) s.s[i] = v end,
   __tostring = function(s)
-  local t = {}
-    for i = 1, s.len do
-      t[#t + 1] = tostring(s.s[i - 1])
-    end
-    return "[" .. table.concat(t, ",") .."]"
+    return "[" .. table.concat(totable(s), ",") .."]"
   end,
 }
 

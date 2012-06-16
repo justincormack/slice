@@ -39,4 +39,5 @@ b = slice.make(int_t,  {1, 2, 3, 4, 5})
 slice.copy(a, b)
 
 assert(tostring(a) == "[1,2,3,4,5]")
+assert(#a.table == 5)
 
