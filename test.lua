@@ -31,3 +31,12 @@ b = a.slice(1, 4)
 assert(b.len == 3)
 assert(tostring(b) == "[2,3,4]")
 
+a = slice.make(int_t, 0, 5)
+assert(tostring(a) == "[]")
+
+b = slice.make(int_t,  {1, 2, 3, 4, 5})
+
+slice.copy(a, b)
+
+assert(tostring(a) == "[1,2,3,4,5]")
+

@@ -52,6 +52,15 @@ function slice.make(ct, len, cap) -- allows table initializer
   return s
 end
 
+-- not sure how to test if same - should we try casting src to dest?
+function slice.copy(dest, src)
+  if ffi.sizeof(dest.type) ~= ffi.sizeof(src.type) then error("cannot copy slices of different types") end
+  local len = math.min(dest.cap, src.len)
+  ffi.copy(dest.s, src.s, ffi.sizeof(dest.type) * len)
+  dest.len = len
+  return dest
+end
+
 return slice
 
 end
