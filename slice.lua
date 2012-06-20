@@ -8,8 +8,6 @@ void *memmove(void *dest, const void *src, size_t n);
 
 local slice = {}
 
-local buffer = ffi.typeof("char [?]")
-
 local mt
 
 local function totable(s)
@@ -23,9 +21,9 @@ end
 -- raw make function
 local function make(ct, len, cap)
   cap = cap or len or 0
-  local array = ffi.cast(ffi.typeof("$ *", ct), buffer(cap * ffi.sizeof(ffi.typeof(ct))))
-  local s = {len = len, cap = cap, s = array, array = array, type = ct}
-  return setmetatable(s, mt)
+  local atype = ffi.typeof("$ [?]", ct)
+  local array = atype(ct, cap)
+  return setmetatable({len = len, cap = cap, s = array, array = array, type = ct}, mt)
 end
 
 local function sametype(a, b) -- not sure how to test if same - should we try casting src to dest?
