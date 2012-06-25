@@ -22,7 +22,8 @@ end
 local function make(ct, len, cap)
   cap = cap or len or 0
   local atype = ffi.typeof("$ [?]", ct)
-  local array = atype(ct, cap)
+  local array = atype(cap)
+
   return setmetatable({len = len, cap = cap, s = array, array = array, type = ct}, mt)
 end
 
