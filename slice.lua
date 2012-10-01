@@ -24,7 +24,7 @@ local function make(ct, len, cap)
   local atype = ffi.typeof("$ [?]", ct)
   local array = atype(cap)
 
-  return setmetatable({len = len, cap = cap, s = array, array = array, type = ct}, mt)
+  return setmetatable({len = len, cap = cap, s = array, array = array, type = ct, stride = ffi.sizeof(ct)}, mt)
 end
 
 local function sametype(a, b) -- not sure how to test if same - should we try casting src to dest?
@@ -38,7 +38,7 @@ mt = {
         if not i then i = 0 end
         if not j then j = s.len end
         local len = j - i
-        return setmetatable({len = len, cap = s.cap, s = s.s + i, array = s.array, type = s.type}, mt)
+        return setmetatable({len = len, cap = s.cap, s = s.s + i, array = s.array, type = s.type, stride = ffi.sizeof(s.type)}, mt)
       end
     end
     if i == 'table' then return totable(s) end

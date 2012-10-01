@@ -3,6 +3,7 @@ local ffi = require "ffi"
 local slice = require "slice"
 
 local int_t = ffi.typeof("int")
+local byte_t = ffi.typeof("uint8_t")
 
 local a, b
 
@@ -45,5 +46,7 @@ a = slice.make(int_t, {1, 2, 3})
 b = slice.make(int_t, {4, 5, 6})
 assert(tostring(a..b) == "[1,2,3,4,5,6]")
 
+a = slice.make(byte_t, {1, 2, 3})
+assert(a.stride == 1)
 
 
